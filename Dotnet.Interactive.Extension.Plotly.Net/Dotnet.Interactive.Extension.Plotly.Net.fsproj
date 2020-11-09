@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>0.1.0-alpha1</Version>
+    <IsPackable>true</IsPackable>
+    <OutputType>Library</OutputType>
+    <PackageDescription>A small dotnet interactive formatter for Plotly.NET charts</PackageDescription>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <NoWarn>$(NoWarn);NU5100</NoWarn><!-- dll outside of lib/ folder -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Formatter.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Plotly.NET" Version="2.0.0-alpha3" />
+    <PackageReference Include="Microsoft.DotNet.Interactive" Version="1.0.0-beta.20553.2" />
+    <PackageReference Include="Microsoft.DotNet.Interactive.Formatting" Version="1.0.0-beta.20553.2" />
+    <PackageReference Include="Microsoft.DotNet.Interactive.FSharp" Version="1.0.0-beta.20553.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)/Dotnet.Interactive.Extension.Plotly.Net.dll" Pack="true" PackagePath="interactive-extensions/dotnet" />
+  </ItemGroup>
+</Project>
