@@ -1,23 +1,21 @@
 ﻿namespace Dotnet.Interactive.Extension.Plotly.Net
 
-open System
-open System.IO
 open System.Threading.Tasks
 open Microsoft.DotNet.Interactive
 open Microsoft.DotNet.Interactive.Formatting
-open Plotly.NET
 open Plotly.NET.GenericChart
 
 type PlotlyNetFormatterKernelExtension() =
 
     let registerFormatter () =
-        Formatter.Register<GenericChart.GenericChart>
-            (Func<FormatContext, GenericChart.GenericChart, TextWriter, bool>(fun context chart writer ->
-                let html = toChartHTML chart
-                writer.Write(html)
-
-                true),
-             HtmlFormatter.MimeType)
+        Formatter.Register<GenericChart>((fun chart writer ->
+            let html = toChartHTML chart
+            let hackedHtml =
+                html.Replace(
+                    """var fsharpPlotlyRequire = requirejs.config({context:'fsharp-plotly',paths:{plotly:'https://cdn.plot.ly/plotly-latest.min'}})""",
+                    """var fsharpPlotlyRequire = requirejs.config({context:'fsharp-plotly',paths:{plotly:'https://cdn.plot.ly/plotly-latest.min'}}) || require;"""
+                )
+            writer.Write(hackedHtml)), HtmlFormatter.MimeType)
 
     interface IKernelExtension with
         member _.OnLoadAsync _ =
